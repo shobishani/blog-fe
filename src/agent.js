@@ -1,10 +1,9 @@
-const agent = require('superagent-use')(require('superagent'));
-/* A sample superagent plugin/middleware. */
-const prefix = require('superagent-prefix');
+import superagentPromise from 'superagent-promise';
+import _superagent from 'superagent';
 
+const superagent = superagentPromise(_superagent, global.Promise);
 
 const API_ROOT = 'https:/api.theclusterheadache.com/api';
-agent.use(prefix(API_ROOT));
 
 const encode = encodeURIComponent;
 const responseBody = res => res.body;
@@ -18,13 +17,13 @@ const tokenPlugin = req => {
 
 const requests = {
     del: url =>
-        agent.del(`${url}`).use(tokenPlugin).then(responseBody),
+        superagent.del(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
     get: url =>
-        agent.get(`${url}`).use(tokenPlugin).then(responseBody),
+        superagent.get(`${API_ROOT}${url}`).use(tokenPlugin).then(responseBody),
     put: (url, body) =>
-        agent.put(`${url}`, body).use(tokenPlugin).then(responseBody),
+        superagent.put(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody),
     post: (url, body) =>
-        agent.post(`${url}`, body).use(tokenPlugin).then(responseBody)
+        superagent.post(`${API_ROOT}${url}`, body).use(tokenPlugin).then(responseBody)
 };
 
 const Auth = {
